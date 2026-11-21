@@ -13,8 +13,39 @@ const orderColumns = [column("订单号", (r) => r.id), column("布种", (r) => 
   column("数量", (r) => r.quantity, true), column("优先", (r) => r.priority), column("源行", ref)];
 const spanColumns = [column("起点 mm", (r) => r.start, true), column("终点 mm", (r) => r.end, true),
   column("长度 mm", (r) => r.end - r.start, true), column("依据", (r) => list(r.refs))];
+const rollLink = (r) => ({text: r.roll, roll: r.roll});
 
-export function views(stage, data, activeRoll, history) {
+function releaseViews(doc) {
+  const manifest = doc?.manifest;
+  const returned = doc?.returned.flatMap((entry) => entry.segments.map((segment) => ({roll: entry.roll, ...segment})));
+  return [
+    ["释放单概要", manifest ? [manifest] : [], [column("释放单号", (r) => r.id.slice(0, 12)),
+      column("撤单工单", (r) => r.cancel_order), column("替代单", (r) => r.substitute.id),
+      column("裁长 mm", (r) => r.substitute.length, true), column("转用", (r) => r.transferred, true),
+      column("隔离", (r) => r.quarantined, true), column("新裁", (r) => r.cut_new, true),
+      column("欠料", (r) => r.short, true), column("释放卷", (r) => list(r.released_rolls)),
+      column("生成 UTC", (r) => r.created_at)]],
+    ["裁片处置", doc?.pieces, [column("裁片", (r) => r.piece), column("卷号", rollLink),
+      column("起点 mm", (r) => r.start, true), column("终点 mm", (r) => r.end, true),
+      column("裁长 mm", (r) => r.length, true),
+      column("处置", (r) => r.disposition === "transferred" ? `转用 → ${r.as}` : "隔离待处置"),
+      column("源行", (r) => r.source)]],
+    ["未裁段回退", returned, [column("卷号", rollLink), column("回退段 mm", (r) => interval([r.start, r.end])),
+      column("长度 mm", (r) => r.length, true), column("新裁签片", (r) => r.consumed_by.length ? list(r.consumed_by) : "—"),
+      column("余量 mm", (r) => r.remaining ? r.remaining.end - r.remaining.start : 0, true)]],
+    ["替代单取片", doc?.substitute_pieces, [column("签片", (r) => r.id),
+      column("来源", (r) => ({transferred: "转用", cut: "新裁"})[r.origin]), column("原裁片", (r) => r.from_piece ?? "—"),
+      column("卷号", rollLink), column("起点 mm", (r) => r.start, true), column("终点 mm", (r) => r.end, true),
+      column("刀口终点 mm", (r) => r.kerf_end, true)]],
+    ["释放前后勾稽", doc?.reconciliation, [column("卷号", rollLink), column("卷长 mm", (r) => r.length, true),
+      column("前合格", (r) => r.before.piece, true), column("前切口", (r) => r.before.kerf, true),
+      column("前未用", (r) => r.before.unused, true), column("后合格", (r) => r.after.piece, true),
+      column("后隔离", (r) => r.after.quarantined, true), column("后切口", (r) => r.after.kerf, true),
+      column("后未用", (r) => r.after.unused, true), column("差额 mm", (r) => r.delta, true)]],
+  ];
+}
+
+export function views(stage, data, activeRoll, history, release) {
   const roll = data?.zones.rolls.find((row) => row.id === activeRoll);
   switch (stage) {
     case "intake": return [
@@ -64,6 +95,7 @@ export function views(stage, data, activeRoll, history) {
       ["归档历史", history, [column("批次号", (r) => ({text: r.id.slice(0, 12), run: r.id})), column("验布单", (r) => r.inputs.defects.file),
         column("刀口 mm", (r) => r.kerf_mm, true), column("片数", (r) => r.piece_count, true), column("归档 UTC", (r) => r.created_at)]],
     ];
+    case "release": return releaseViews(release);
     default: throw new Error("模块不存在");
   }
 }

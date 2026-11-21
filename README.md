@@ -23,10 +23,11 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 18426
 2. 选 `R-001`，查看重叠安全区并集。选 `R-003`，查看整卷封存与原始疵点行。选 `R-005`，查看裁片连刀口用到卷尾 625 mm。
 3. 打开「换卷核算」下的「工单欠料」，确认 `C004` 缺 1 片。可在「裁床签条」的归档历史切回其他批次。
 4. 点击「重跑」显示核验一致。「打印签条」打开当前卷的打印视图，「导出卷宗」下载本次归档及证据。
+5. 打开「撤单释放」，撤单工单选 `C002`，确认替代急单参数后「生成释放单」。核对裁片处置、未裁段回退、替代单取片和释放前后勾稽；再次提交同一撤单会沿用原释放单，原卷宗与签条不变。
 
 ## 模块与验证
 
-模块接口为 `GET /api/intake`、`/api/locate`、`/api/zones`、`/api/fit`、`/api/changeovers`、`/api/ledger`、`/api/slips`。模块都能用 `sample=dirty` 或 `sample=clean` 单独试算，支持 `kerf_mm` 及归档 `run_id`。`POST /api/runs` 归档，`POST /api/runs/{id}/rerun` 重算核验，`GET /api/export/{id}` 独立下载。接口文档在 `/docs`。
+模块接口为 `GET /api/intake`、`/api/locate`、`/api/zones`、`/api/fit`、`/api/changeovers`、`/api/ledger`、`/api/slips`。模块都能用 `sample=dirty` 或 `sample=clean` 单独试算，支持 `kerf_mm` 及归档 `run_id`。`POST /api/runs` 归档，`POST /api/runs/{id}/rerun` 重算核验，`GET /api/export/{id}` 独立下载。撤单释放走 `POST /api/runs/{id}/releases`，同批重跑复用原释放单，查询用 `GET /api/runs/{id}/releases` 与 `GET /api/releases/{id}`。接口文档在 `/docs`。
 
 详情见 [数据字典](docs/DATA-DICTIONARY.md) 和 [深度登记](docs/DEPTH.md)。项目采用有界一维配长，超过规划上限时需拆分工单。
 

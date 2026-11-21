@@ -9,6 +9,7 @@ from app.api import router as stages
 from app.archive import Archive
 from app.config import ROOT, Settings
 from app.modules.m7_slips.handler import router as runs
+from app.modules.m8_release.handler import router as releases
 from app.reasons import FabricError
 from app.web import router as web
 
@@ -36,6 +37,7 @@ def build_application(settings=None):
     app.mount("/static", StaticFiles(directory=ROOT / "app/static"), name="static")
     app.include_router(stages)
     app.include_router(runs)
+    app.include_router(releases)
     app.include_router(web)
     return app
 

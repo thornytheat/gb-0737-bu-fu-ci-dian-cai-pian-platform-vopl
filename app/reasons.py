@@ -11,7 +11,10 @@ MESSAGES = {
     "NO_COMPATIBLE_ROLL": "布种或幅宽不匹配", "ROLLS_HELD": "匹配布卷均封存",
     "SEGMENT_TOO_SHORT": "无单段可容纳该裁片", "CAPACITY_USED": "可用段已由求解方案分配",
     "STALE_RUN": "样例、刀口或规则版本已变更", "REPLAY_DIFF": "重算方案与归档不同",
-    "STORE_BUSY": "归档库暂忙", "FORM_INVALID": "参数无效，检查刀口值",
+    "STORE_BUSY": "归档库暂忙", "FORM_INVALID": "参数无效，请核对表单数值",
+    "CANCEL_UNKNOWN": "撤单工单不在该批次", "CANCEL_NO_PIECES": "撤单工单在该批次无已排裁片",
+    "SUBSTITUTE_CLASH": "替代单号与既有工单重复", "SUBSTITUTE_INCOMPATIBLE": "替代单布种或幅宽与释放卷不匹配",
+    "RELEASE_EXISTS": "该批次已生成撤单释放单", "RELEASE_UNKNOWN": "撤单释放单不存在",
 }
 
 

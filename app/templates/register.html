@@ -4,6 +4,16 @@
       <h2 id="view-title">禁切区间</h2>
       <span id="view-meta"></span>
     </div>
+    <form id="release-form" class="release-form" hidden>
+      <label>撤单工单 <select id="cancel-order" required></select></label>
+      <label>替代单号 <input id="sub-id" maxlength="40" required></label>
+      <label>布种 <select id="sub-fabric" required></select></label>
+      <label>最小幅宽 mm <input id="sub-width" type="number" min="1" max="4000" step="1" required></label>
+      <label>净长 mm <input id="sub-net" type="number" min="1" step="1" required></label>
+      <label>单端缝份 mm <input id="sub-seam" type="number" min="0" step="1" value="0" required></label>
+      <label>数量 <input id="sub-quantity" type="number" min="1" step="1" value="1" required></label>
+      <button class="ink-btn" id="release-submit" type="submit">生成释放单</button>
+    </form>
     <div id="record-tabs" class="tabs" role="group" aria-label="明细类别"></div>
     <div id="record-table" class="table-window" tabindex="0" aria-label="作业明细">
       <p class="empty">正在读取验布单。</p>

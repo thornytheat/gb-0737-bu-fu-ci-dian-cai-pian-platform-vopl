@@ -82,6 +82,15 @@ h2 { font: 700 17px/1.25 var(--font-title); letter-spacing: .055em; }
 #delta { color: var(--good); }
 .register { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(265px, 1fr); gap: var(--gap); margin-top: var(--gap); align-items: start; }
 .tabs { min-height: 34px; display: flex; flex-wrap: wrap; gap: 0 5px; padding: 2px var(--pad); border-bottom: 1px solid var(--line); }
+.release-form { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: end; padding: 8px var(--pad); border-bottom: 1px solid var(--line); }
+.release-form label { display: grid; gap: 3px; color: var(--muted); font-size: 11px; }
+.release-form input, .release-form select { min-height: 31px; padding: 4px 8px; border: 1px solid var(--line-strong);
+  border-radius: var(--radius); background: var(--paper); }
+.release-form input { width: 84px; }
+.release-form #sub-id, .release-form #sub-fabric { width: 110px; }
+.release-form .ink-btn { min-height: 31px; padding: 4px 12px; border: 1px solid var(--accent); border-radius: var(--radius);
+  background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.release-form .ink-btn:disabled { opacity: .54; }
 .tabs button { border: 0; border-bottom: 2px solid transparent; padding: 3px 6px; background: transparent; color: var(--muted); }
 .tabs button[aria-pressed=true] { color: var(--accent); border-color: var(--accent); font-weight: 600; }
 .table-window { min-height: 72px; max-height: 320px; overflow: auto; }

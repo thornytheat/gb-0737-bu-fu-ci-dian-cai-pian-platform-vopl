@@ -14,6 +14,7 @@
 | M5 换卷核算 | 确认领卷次序、实际坐标和欠料 | `GET /api/changeovers` | `app/modules/m5_changeovers/solver.py` `app/modules/m5_changeovers/placements.py` | `tests/test_changeovers.py` |
 | M6 用布勾稽 | 按卷审核切口守恒及源记录分流 | `GET /api/ledger` | `app/modules/m6_ledger/partition.py` `app/modules/m6_ledger/service.py` | `tests/test_ledger.py` |
 | M7 裁床签条 | 排版归档、同源重跑、按卷打印并下载卷宗 | `GET /api/slips` `POST /api/runs` | `app/modules/m7_slips/receipts.py` `app/modules/m7_slips/archiving.py` | `tests/test_slips.py` |
+| M8 撤单释放 | 撤单裁片转用或隔离、未裁段回退、释放前后勾稽 | `POST /api/runs/{id}/releases` `GET /api/releases/{id}` | `app/modules/m8_release/service.py` `app/modules/m8_release/archiving.py` | `tests/test_release.py` |
 
 ## 陷阱登记
 
@@ -37,5 +38,6 @@
 ## 勾稽与局限
 
 - 卷长逐卷校验，等于合格裁片、禁切、切口和未用段之和。封存卷全长算禁切。每个区间恰好在一类中。
+- 撤单释放锚定已归档批次，原卷宗与签条不变。释放后逐卷勾稽：卷长等于合格、禁切、切口、隔离与未用段之和，差额为零才允许落库；每批次只允许一张释放单。
 - 各来源原始条数等于有效、重复和隔离之和。疵点定位隔离会在最终条数账里移动分项。
 - 只做沿卷长的条带裁切。幅宽用于每片布种匹配和最小幅宽约束。精确规划上限与输入文件限制见数据字典。
